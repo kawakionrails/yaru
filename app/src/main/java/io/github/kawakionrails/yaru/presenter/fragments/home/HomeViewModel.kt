@@ -1,6 +1,7 @@
 package io.github.kawakionrails.yaru.presenter.fragments.home
 
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.kawakionrails.yaru.data.api.RetrofitService
 import io.github.kawakionrails.yaru.data.models.RandomUser
 import io.github.kawakionrails.yaru.presenter.base.BaseViewModel
@@ -8,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+@HiltViewModel
 class HomeViewModel : BaseViewModel() {
 
     private val _randomUserState: MutableStateFlow<RandomUserState<RandomUser>> =

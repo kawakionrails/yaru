@@ -8,10 +8,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.WithFragmentBindings
 import io.github.kawakionrails.yaru.databinding.FragmentHomeBinding
 import io.github.kawakionrails.yaru.presenter.base.BaseFragment
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
+@WithFragmentBindings
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private val homeViewModel: HomeViewModel by viewModels()
@@ -50,6 +54,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                                 gender.setText(randomUser.gender)
                                 firstName.setText(randomUser.name.first)
                                 lastName.setText(randomUser.name.last)
+                                dateOfBirth.setText(randomUser.dob.date)
                                 Snackbar.make(
                                     homeLayout,
                                     "User generated successfully!",
