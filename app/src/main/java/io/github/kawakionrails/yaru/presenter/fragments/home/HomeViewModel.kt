@@ -13,6 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor() : BaseViewModel() {
 
+    val genderItems: List<String> = listOf("Random", "Male", "Female")
     private val _randomUserState: MutableStateFlow<RandomUserState<RandomUser>> =
         MutableStateFlow(RandomUserState.Idle)
     val randomUserState: StateFlow<RandomUserState<RandomUser>>
@@ -25,11 +26,11 @@ class HomeViewModel @Inject constructor() : BaseViewModel() {
         data class Failure(val message: String) : RandomUserState<Nothing>()
     }
 
-    fun getRandomUser() {
+    fun getRandomUser(gender: String?) {
         viewModelScope.launch {
             _randomUserState.value = RandomUserState.Loading
             try {
-                val response = RetrofitService.randomUserService.getRandomUser()
+                val response = RetrofitService.randomUserService.getRandomUser(gender ?: "")
                 if (response.isSuccessful) {
                     val randomUser = response.body()?.results?.get(0)
                     _randomUserState.value = if (randomUser != null) {

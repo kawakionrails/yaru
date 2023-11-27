@@ -5,6 +5,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 object RetrofitService {
 
@@ -21,6 +22,8 @@ object RetrofitService {
 interface RandomUserService {
 
     @GET("api")
-    suspend fun getRandomUser(): Response<RandomUserResponse>
+    suspend fun getRandomUser(
+        @Query("gender") gender: String
+    ): Response<RandomUserResponse>
 
 }
