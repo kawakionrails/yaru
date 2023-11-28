@@ -5,6 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.kawakionrails.yaru.data.api.RetrofitService
 import io.github.kawakionrails.yaru.data.models.RandomUser
 import io.github.kawakionrails.yaru.presenter.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -27,20 +28,21 @@ class HomeViewModel @Inject constructor() : BaseViewModel() {
     }
 
     fun getRandomUser(gender: String?) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _randomUserState.value = RandomUserState.Loading
             try {
                 val response = RetrofitService.randomUserService.getRandomUser(gender ?: "")
-                if (response.isSuccessful) {
-                    val randomUser = response.body()?.results?.get(0)
-                    _randomUserState.value = if (randomUser != null) {
-                        RandomUserState.Success(randomUser)
-                    } else {
-                        RandomUserState.Failure("Unknown data.")
+                _randomUserState.value = when {
+                    response.isSuccessful -> {
+                        val randomUser = response.body()?.results?.get(0)
+                        if (randomUser != null) {
+                            RandomUserState.Success(randomUser)
+                        } else {
+                            RandomUserState.Failure("Unknown data.")
+                        }
                     }
-                } else {
-                    _randomUserState.value =
-                        RandomUserState.Failure("[${response.code()}]: ${response.message()}")
+
+                    else -> RandomUserState.Failure("[${response.code()}]: ${response.message()}")
                 }
             } catch (exception: Exception) {
                 _randomUserState.value =

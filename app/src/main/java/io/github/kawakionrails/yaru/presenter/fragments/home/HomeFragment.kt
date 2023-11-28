@@ -1,5 +1,8 @@
 package io.github.kawakionrails.yaru.presenter.fragments.home
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -59,6 +62,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                     // TODO: Not yet implemented
                 }
             })
+            copyFirstName.setOnClickListener {
+                val clipboardManager =
+                    requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val plainText =
+                    ClipData.newPlainText("text", firstName.text)
+                clipboardManager.setPrimaryClip(plainText)
+            }
             generate.setOnClickListener {
                 val gender =
                     if (gender.text.toString() == "Random") ""
@@ -83,7 +93,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                                 firstName.setText(randomUser.name.first)
                                 lastName.setText(randomUser.name.last)
                                 dateOfBirth.setText(randomUser.dob.date)
+//                                age.setText(randomUser.dob.date)
                                 email.setText(randomUser.email)
+                                phone.setText(randomUser.phone)
                                 Snackbar.make(
                                     homeLayout,
                                     "User generated successfully!",
